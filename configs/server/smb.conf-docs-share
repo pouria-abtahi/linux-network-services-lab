@@ -1,0 +1,7 @@
+# Share added to /etc/samba/smb.conf
+[docs]
+   comment = Documents Share
+   path = /docs
+   read only = yes
+   browseable = yes
+   guest ok = yes

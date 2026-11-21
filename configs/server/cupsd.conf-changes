@@ -1,0 +1,15 @@
+# /etc/cups/cupsd.conf changes for remote admin and printer sharing
+Listen 192.168.62.1:631
+Listen /run/cups/cups.sock
+
+<Location />
+  Order allow,deny
+  Allow all
+</Location>
+
+<Location /admin>
+  AuthType Default
+  Require user @SYSTEM
+  Order allow,deny
+  Allow all
+</Location>

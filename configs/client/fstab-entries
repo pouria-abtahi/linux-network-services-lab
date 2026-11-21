@@ -1,0 +1,3 @@
+# Added to /etc/fstab on the client
+//192.168.62.1/docs      /mnt/docs     cifs  guest,vers=3.0  0 0
+192.168.62.1:/backups    /mnt/backups  nfs   defaults        0 0

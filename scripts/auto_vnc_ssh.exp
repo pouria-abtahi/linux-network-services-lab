@@ -1,0 +1,40 @@
+#!/usr/bin/expect -f
+# Opens an SSH tunnel to the server and launches the VNC viewer through it,
+# so the VNC session never crosses the network unencrypted.
+#
+# Lab version: the original stored the SSH password in the script.
+# It is replaced here with a placeholder. Key-based SSH auth would remove
+# the need for it entirely, and is what I would use outside a lab.
+
+set timeout -1
+set ssh_user    "vncuser"
+set server_ip   "192.168.62.1"
+set ssh_pass    "<redacted>"
+set vnc_display ":4"
+set vnc_passfile "/root/.vncpass"
+
+spawn ssh -L 5904:localhost:5904 $ssh_user@$server_ip -o StrictHostKeyChecking=no
+
+expect {
+    "password:" {
+        send "$ssh_pass\r"
+        exp_continue
+    }
+    "Are you sure you want to continue connecting" {
+        send "yes\r"
+        exp_continue
+    }
+    "Last login" {
+        puts "SSH tunnel established. Launching VNC viewer..."
+        exec vncviewer localhost$vnc_display -passwd $vnc_passfile &
+        interact
+    }
+    eof {
+        puts "SSH connection failed or was closed."
+        exit 1
+    }
+    timeout {
+        puts "SSH connection timed out."
+        exit 1
+    }
+}
